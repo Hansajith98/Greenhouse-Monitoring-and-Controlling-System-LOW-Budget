@@ -8,9 +8,8 @@
 
 
 # Ignore all config files
-config.h
+config.*
 
-/configFiles
 
 # Ignore files related to API keys
 .env
