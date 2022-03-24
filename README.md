@@ -32,8 +32,8 @@ This repository belongs to a system that control and monitor greenhouse automati
 
 ### File Structure
 - Arduino
-- - FirebaseToController - Get controling data from firebase when database updated, and control greenhouse. 
-- - SensorDataToFirebase - Send sensor data to the firebase within every 90 seconds.
+  - FirebaseToController - Get controling data from firebase when database updated, and control greenhouse. 
+  - SensorDataToFirebase - Send sensor data to the firebase within every 90 seconds.
 - greeenhouse - Django application for User dashboard and also it will set controller on and off based on sensor data. This also create and run websocket to send data to the front-end.
 - Websocket Client - Serverside script for sending real-time updating data to the front-end when firebase data changed.
 
