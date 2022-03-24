@@ -13,6 +13,7 @@ firebase = pyrebase.initialize_app(config)
 authe = firebase.auth()
 database = firebase.database()
 
+green_house_Id = "greenhouse1"
 
 def index(request):
     return render(request, 'index.html')
@@ -38,7 +39,7 @@ def retrieve_sensor_dataframe():
 
 
 def retrieve_controller_dictionary():
-    all_data = database.child("Controller").get()
+    all_data = database.child("Controller").child(green_house_Id).get()
     return all_data.val()
 
 
@@ -85,15 +86,3 @@ def get_data_from_dataframe(df, chart_data, labels, aggfunc=np.sum, round_values
     labels = pivot.columns.tolist()
 
     return values, labels
-
-# import json
-# import time
-# import websocket
-
-# ws = websocket.WebSocket()
-
-# ws.connect('ws://127.0.0.1:8000/ws/some_url')
-
-# for i in range(10):
-#     time.sleep(2)
-#     ws.send(json.dumps({'temperature':50}))
