@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
+from django.contrib.auth.decorators import login_required
 import pyrebase
 import pandas as pd
 import numpy as np
 import json
 
+from greenhouse.decorators import login_necessary
 from configFiles.config import config
 from utils.charts import months, colorPrimary, colorSuccess, colorDanger, generate_color_palette, get_year_dict
 
@@ -15,19 +17,21 @@ database = firebase.database()
 
 green_house_Id = "greenhouse1"
 
+@login_necessary()
 def index(request):
     return render(request, 'index.html')
 
-
+@login_necessary()
 def update_controller(request):
     if (request.method == 'GET'):
         fan_status = int(request.GET.get('Fan')) if request.GET.get('Fan') != None else None
-        light_status = int(request.GET.get('Light')) if request.GET.get('Light') != None else None
+        ac_status = int(request.GET.get('AC')) if request.GET.get('AC') != None else None
         if fan_status != None:
             database.child("Controller").child("Fan").set(fan_status)
-        if light_status != None:
-            database.child("Controller").child("Light").set(light_status)
+        if ac_status != None:
+            database.child("Controller").child("AC").set(ac_status)
     return HttpResponse("Accepted", content_type='text/plain') 
+
 
 def retrieve_sensor_dataframe():
     all_data = database.child("Sensor").get()
@@ -66,7 +70,7 @@ def send_dashboard_data(request):
         },
         'controllers': {
             'Fan': controller_data['Fan'],
-            'Light': controller_data['Light']
+            'AC': controller_data['AC']
         },
     })
 

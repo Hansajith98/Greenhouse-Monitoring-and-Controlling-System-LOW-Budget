@@ -16,10 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from visualizepanel import views
+from menupanel import views as menuview
+from authentication import views as authenticationview
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
-    path('data/chart/', views.send_dashboard_data, name='dashboard-data'),
-    path('data/controller/', views.update_controller, name='dashboard-data'),
+    # path('dashboard', views.index, name='index'),
+    path('dashboard/', include('visualizepanel.urls')),
+    path('dashboard/chart/', views.send_dashboard_data, name='dashboard-data'),
+    path('dashboard/controller/', views.update_controller, name='dashboard-data'),
+    path('menu/', include('menupanel.urls')),
+    # path('menu', menuview.menupanel, name='menupanel'),
+    path('authentication/', include('authentication.urls')),
 ]

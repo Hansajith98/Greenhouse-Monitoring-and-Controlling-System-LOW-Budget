@@ -4,7 +4,7 @@ from channels.auth import AuthMiddlewareStack
 from django.urls import path
 
 ws_urlpatterns = [
-    path('ws/some_url', WSConsumer.as_asgi()),
+    path('ws/dashboard', WSConsumer.as_asgi()),
 ]
 
 # application = ProtocolTypeRouter({

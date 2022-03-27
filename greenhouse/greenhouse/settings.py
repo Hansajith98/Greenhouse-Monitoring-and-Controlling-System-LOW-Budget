@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'visualizepanel',
+    'menupanel',
+    'authentication',
     'channels'
 ]
 
@@ -136,7 +138,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'greenhouse/static/'),
-    os.path.join(BASE_DIR, 'visualizepanel/static/')
+    os.path.join(BASE_DIR, 'visualizepanel/static/'),
+    os.path.join(BASE_DIR, 'menupanel/static/'),
+    os.path.join(BASE_DIR, 'authentication/static/')
 ]
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
@@ -146,3 +150,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Login Urls and redirect Urls
+LOGIN_URL = "/authentication/"
+LOGIN_REDIRECT_URL = "/authentication/"
+
+# Session Timeout
+SESSION_COOKIE_AGE = 5 * 60
+SESSION_SAVE_EVERY_REQUEST = True

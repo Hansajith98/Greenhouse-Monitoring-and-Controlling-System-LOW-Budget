@@ -40,11 +40,11 @@
                 </label>
             </div>
             <div class="col-md-3">
-                Light Button
+                AC Button
             </div>
             <div class="col-md-3">
-                <label class="switch" id="Light">
-                    <input type="checkbox" id="LightButton" onclick="light_button_clicked()">
+                <label class="switch" id="AC">
+                    <input type="checkbox" id="ACButton" onclick="AC_button_clicked()">
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -55,7 +55,7 @@
 
 
     <script>
-        var endpoint = 'data/chart/';
+        var endpoint = 'chart/';
         var chartdata;
 
         $.ajax({
@@ -81,7 +81,7 @@
             var label = response_data.data.datasets.label;
 
             document.getElementById("FanButton").checked = response_data.controllers.Fan;
-            document.getElementById("LightButton").checked = response_data.controllers.Light;
+            document.getElementById("ACButton").checked = response_data.controllers.AC;
 
             console.log('data');
             // console.log(XAxes_labels);
@@ -134,7 +134,7 @@
             var fan_status = document.getElementById("FanButton").checked == true ? "1" : "0";
             $.ajax({
                 method: "GET",
-                url: 'data/controller/',
+                url: 'controller/',
                 data: "Fan=" + fan_status,
                 success: function (data) {
                     console.log("Updated");
@@ -146,14 +146,14 @@
             })
         }
 
-        function light_button_clicked() {
-            document.getElementById("LightButton").checked = document.getElementById("LightButton").checked == true ? 1 : 0;
-            console.log(document.getElementById("LightButton").checked);
-            var fan_status = document.getElementById("LightButton").checked == true ? "1" : "0";
+        function AC_button_clicked() {
+            document.getElementById("ACButton").checked = document.getElementById("ACButton").checked == true ? 1 : 0;
+            console.log(document.getElementById("ACButton").checked);
+            var fan_status = document.getElementById("ACButton").checked == true ? "1" : "0";
             $.ajax({
                 method: "GET",
-                url: 'data/controller/',
-                data: "Light=" + fan_status,
+                url: 'controller/',
+                data: "AC=" + fan_status,
                 success: function (data) {
                     console.log("Updated");
                 },
@@ -165,7 +165,7 @@
         }
 
         var wsStart = 'ws://'
-        var endpoint = wsStart + window.location.host + window.location.pathname + "ws/some_url"
+        var endpoint = wsStart + window.location.host + "ws/"
         let socket = new WebSocket(endpoint);
 
         socket.onopen = function (e) {

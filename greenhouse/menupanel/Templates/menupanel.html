@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Menu Panel</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/menupanel.css' %}" />
+
+</head>
+
+<body>
+    <h1>Hello</h1>
+    {% for greenhouse in greenhouse_names %}
+    <a href="http://127.0.0.1:8000/dashboard/{{ greenhouse }}" style="text-decoration: none; color: black;">
+        <div class="card" id={{ greenhouse }} >
+            <div class="container">
+            <h4><b>{{ greenhouse }}</b></h4>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+
+</body>
+</html>

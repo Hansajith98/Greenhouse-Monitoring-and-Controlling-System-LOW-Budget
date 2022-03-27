@@ -6,7 +6,7 @@ from configFiles.config import config
 
 ws = websocket.WebSocket()
 
-ws.connect('ws://127.0.0.1:8000/ws/some_url')
+ws.connect('ws://127.0.0.1:8000/ws/dashboard')
 
 # for i in range(10):
 #     time.sleep(2)

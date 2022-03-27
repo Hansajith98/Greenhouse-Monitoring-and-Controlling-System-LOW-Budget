@@ -9,14 +9,12 @@ crop_data = database.child('CropDevices').get()
 crop_device_data = {}
 
 for green_house in crop_data.each():
-    print(green_house.key())
     for device, crop in green_house.val().items():
         crop_device_data[device] = [crop, green_house.key()]
         
 threhoulds = database.child('Threshoulds').get()
 crop_min_max = threhoulds.val()
 
-print(crop_min_max['apple']['min']['Humidity'])
 
 
 def stream_handler(message):
