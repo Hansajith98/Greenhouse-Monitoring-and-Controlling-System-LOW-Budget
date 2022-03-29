@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>GreenHouse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+</head>
+
+<body class="bg-light bg-gradient">
+    <div class="border-bottom mt-2 p-1">
+        <ul class="nav justify-content-end mb-3">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">User Name</a>
+            </li>
+            <li class="nav-item me-4">
+                <a class="nav-link text-light text-decoration-none btn btn-primary"
+                    href="http://127.0.0.1:8000/authentication/logout">Log Out</a>
+            </li>
+
+        </ul>
+    </div>
+    <div class="container  align-items-center justify-content-center pt-1 px-5">
+        <form action="/menu/addnewgreenhouse/" method="post" class="pt-5 container px-5">
+            <div class="fs-1 text-center text-secondary fw-bold">Register New GreenHouse</div>
+            {% csrf_token %}
+            <div class="container pt-5 mx-3 px-5">
+                <div class="mb-3 px-5">
+                    <label for="formGroupExampleInput" class="form-label">GrreenHouse Name</label>
+                    <input type="text" class="form-control " id="greenhouse_name" name="greenhouse_name">
+                </div>
+                <div class="mb-3 px-5">
+                    <label for="formGroupExampleInput" class="form-label">GreenHouse ID</label>
+                    <input type="text" class="form-control " id="greenhouse_id" name="greenhouse_id">
+                </div>
+                <div class="mb-3 px-5">
+                    <label for="formGroupExampleInput" class="form-label">Device Name</label>
+                    <input type="text" class="form-control " id="device_name" name="device_name">
+                </div>
+                <div class="container px-5 mb-3">
+                    <label for="formGroupExampleInput" class="form-label">Crop type</label>
+                    <select class="form-control select2bs4" name="crop_type" id="crop_type" style="width: 100%">
+                        <option value="apple">Apple</option>
+                        <option value="banana">Banana</option>
+                        <option value="blackgram">Blackgram</option>
+                        <option value="chickpea">Chickpea</option>
+                        <option value="coconut">Coconut</option>
+                        <option value="coffee">Coffee</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="grapes">Grapes</option>
+                        <option value="jute">Jute</option>
+                        <option value="kidneybeans">Kidneybeans</option>
+                        <option value="lentil">Lentil</option>
+                        <option value="maize">Maize</option>
+                        <option value="mango">Mango</option>
+                        <option value="mothbeans">Mothbeans</option>
+                        <option value="mungbean">Mungbean</option>
+                        <option value="muskmelon">Muskmelon</option>
+                        <option value="papaya">Papaya</option>
+                        <option value="pigeonpeas">Pigeonpeas</option>
+                        <option value="pomegranate">Pomegranate</option>
+                        <option value="rice">Rice</option>
+                        <option value="watermelon">Watermelon</option>
+                    </select>
+                </div>
+                <div class="mb-3 px-5 ">
+                    <button class="btn btn-primary" value="SignUp">Register GreenHouse</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'js/register.js' %}"></script>
+</body>
+
+</html>

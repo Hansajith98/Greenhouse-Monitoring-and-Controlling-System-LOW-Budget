@@ -6,47 +6,50 @@
     <meta charset="utf-8">
     <title>GreenHouse Dashboard</title>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
     <link rel="stylesheet" href="{% static 'index.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 
 
 </head>
 
-<body class="container-fluid">
-    <center class="row">
-        <h1>Welcome to GreenHouse Dashboard</h1>
-    </center>
-    <hr />
-    <div class="row">
-        <div class="col-md-6">
-            <canvas id="myChartline"></canvas>
-        </div>
-        <div class="col-md-6">
-            <div class="col-md-3">
-                Fan Button
+<body class="bg-light bg-gradient">
+    <div class="container-fluid">
+        <center class="row">
+            <div class="fs-1 text-secondary fw-bold text-center"><h1>Welcome to GreenHouse Dashboard</h1></div>
+        </center>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <canvas id="myChartline"></canvas>
             </div>
-            <div class="col-md-3">
-                <label class="switch" id="Fan">
-                    <input type="checkbox" id="FanButton" onclick="fan_button_clicked()">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="col-md-3">
-                AC Button
-            </div>
-            <div class="col-md-3">
-                <label class="switch" id="AC">
-                    <input type="checkbox" id="ACButton" onclick="AC_button_clicked()">
-                    <span class="slider round"></span>
-                </label>
+            <div class="col-md-6">
+                <div class="col-md-3">
+                    Fan Button
+                </div>
+                <div class="col-md-3">
+                    <label class="switch" id="Fan">
+                        <input type="checkbox" id="FanButton" onclick="fan_button_clicked()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    AC Button
+                </div>
+                <div class="col-md-3">
+                    <label class="switch" id="AC">
+                        <input type="checkbox" id="ACButton" onclick="AC_button_clicked()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
         </div>
     </div>

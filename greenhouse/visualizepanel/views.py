@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-from django.contrib.auth.decorators import login_required
 import pyrebase
 import pandas as pd
 import numpy as np
@@ -15,10 +14,12 @@ firebase = pyrebase.initialize_app(config)
 authe = firebase.auth()
 database = firebase.database()
 
-green_house_Id = "greenhouse1"
+green_house_Id = 'greenhouse1'
 
 @login_necessary()
-def index(request):
+def index(request, greenhouse):
+    global green_house_Id
+    green_house_Id = greenhouse
     return render(request, 'index.html')
 
 @login_necessary()
@@ -27,9 +28,9 @@ def update_controller(request):
         fan_status = int(request.GET.get('Fan')) if request.GET.get('Fan') != None else None
         ac_status = int(request.GET.get('AC')) if request.GET.get('AC') != None else None
         if fan_status != None:
-            database.child("Controller").child("Fan").set(fan_status)
+            database.child("Controller").child(green_house_Id).child("Fan").set(fan_status)
         if ac_status != None:
-            database.child("Controller").child("AC").set(ac_status)
+            database.child("Controller").child(green_house_Id).child("AC").set(ac_status)
     return HttpResponse("Accepted", content_type='text/plain') 
 
 
