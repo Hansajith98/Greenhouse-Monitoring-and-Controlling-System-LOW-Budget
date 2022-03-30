@@ -11,6 +11,9 @@
 
 #define LED_PIN 2
 
+String greenhouse_id = "greenhouse1";   // Change this with greenhouse id the device is assigned
+String device_id = "Device01";    // Change this with device id
+
 //Define Firebase Data object
 FirebaseData fbdo;
 
@@ -18,7 +21,7 @@ FirebaseAuth auth;
 FirebaseConfig config;
 
 static int temperature = random(0, 30);
-static int humidity = random(10, 80);
+static int humidity = random(10, 100);
 
 unsigned long sendDataPrevMillis = 0;
 
@@ -97,17 +100,6 @@ void setup()
   /* Assign the callback function for the long running token generation task */
   config.token_status_callback = tokenStatusCallback; //see addons/TokenHelper.h
 
-  //Or use legacy authenticate method
-  //config.database_url = DATABASE_URL;
-  //config.signer.tokens.legacy_token = "<database secret>";
-
-  //To connect without auth in Test Mode, see Authentications/TestMode/TestMode.ino
-
-  //////////////////////////////////////////////////////////////////////////////////////////////
-  //Please make sure the device free Heap is not lower than 80 k for ESP32 and 10 k for ESP8266,
-  //otherwise the SSL connection will fail.
-  //////////////////////////////////////////////////////////////////////////////////////////////
-
   Firebase.begin(&config, &auth);
 
   //Comment or pass false value when WiFi reconnection will control by your code or third party library
@@ -115,35 +107,6 @@ void setup()
 
   Firebase.setDoubleDigits(5);
 
-  /** Timeout options.
-
-    //WiFi reconnect timeout (interval) in ms (10 sec - 5 min) when WiFi disconnected.
-    config.timeout.wifiReconnect = 10 * 1000;
-
-    //Socket connection and SSL handshake timeout in ms (1 sec - 1 min).
-    config.timeout.socketConnection = 10 * 1000;
-
-    //Server response read timeout in ms (1 sec - 1 min).
-    config.timeout.serverResponse = 10 * 1000;
-
-    //RTDB Stream keep-alive timeout in ms (20 sec - 2 min) when no server's keep-alive event data received.
-    config.timeout.rtdbKeepAlive = 45 * 1000;
-
-    //RTDB Stream reconnect timeout (interval) in ms (1 sec - 1 min) when RTDB Stream closed and want to resume.
-    config.timeout.rtdbStreamReconnect = 1 * 1000;
-
-    //RTDB Stream error notification timeout (interval) in ms (3 sec - 30 sec). It determines how often the readStream
-    //will return false (error) when it called repeatedly in loop.
-    config.timeout.rtdbStreamError = 3 * 1000;
-
-    Note:
-    The function that starting the new TCP session i.e. first time server connection or previous session was closed, the function won't exit until the
-    time of config.timeout.socketConnection.
-
-    You can also set the TCP data sending retry with
-    config.tcp_data_sending_retry = 1;
-
-  */
 }
 
 void loop()
@@ -156,7 +119,7 @@ void loop()
     time_t now = time(NULL);
     char CurrentTime [80] = "\0";
     strftime(CurrentTime, sizeof(CurrentTime), "%a %b %d %T %Y", localtime(&now));
-    String DataRowId = "/Sensor/" + String(CurrentTime) +"/";
+    String DataRowId = "/Sensor/" + greenhouse_id + "/" + String(CurrentTime) + "/";
     String HumidityId = "Humidity";
     String TemperatureId = "Temperature";
     String DeviceId = "DeviceId";
@@ -168,7 +131,7 @@ void loop()
     FirebaseJson json;
     json.add(HumidityId, humidity);
     json.add(TemperatureId, temperature);
-    json.add(DeviceId, "Device01");
+    json.add(DeviceId, device_id);
     Serial.printf("Update node... %s\n", Firebase.updateNode(fbdo, DataRowId, json) ? "ok" : fbdo.errorReason().c_str());
 
     Serial.println();

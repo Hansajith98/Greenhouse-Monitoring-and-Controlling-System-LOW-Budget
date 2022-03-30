@@ -1,21 +1,5 @@
-/**
-   Created by K. Suwatchai (Mobizt)
-
-   Email: k_suwatchai@hotmail.com
-
-   Github: https://github.com/mobizt/Firebase-ESP8266
-
-   Copyright (c) 2022 mobizt
-
-*/
-
-#if defined(ESP32)
-#include <WiFi.h>
-#include <FirebaseESP32.h>
-#elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 #include <FirebaseESP8266.h>
-#endif
 
 //Provide the token generation process info.
 #include <addons/TokenHelper.h>
@@ -26,7 +10,9 @@
 #include "config.h"
 
 #define FAN 2
-#define LIGHT 3
+#define AC 3
+#define HEATER 4
+#define HUMIDIFIER 5
 
 //Define Firebase Data object
 FirebaseData stream;
@@ -34,6 +20,8 @@ FirebaseData fbdo;
 
 FirebaseAuth auth;
 FirebaseConfig config;
+
+String greenhouse_id = "greenhouse1";   // Change greenhouseid according to device rregisterd id
 
 unsigned long sendDataPrevMillis = 0;
 
@@ -52,24 +40,49 @@ void streamCallback(StreamData data)
 
   int ControllerValue;
   int ControllerPin;
-  
+
   if (data.dataTypeEnum() == fb_esp_rtdb_data_type_integer)
     ControllerValue = data.to<int>();
 
-  if (data.dataPath() == "/Light") {
-    ControllerPin = LIGHT;
-    if (ControllerValue == 1)
+  if (data.dataPath() == "/AC") {
+    ControllerPin = AC;
+    if (ControllerValue == 1) {
       digitalWrite(ControllerPin, LOW);
-    else
+      Serial.println("AC turend ON");
+    } else {
       digitalWrite(ControllerPin, HIGH);
+      Serial.println("AC turend OFF");
+    }
   }
   if (data.dataPath() == "/Fan") {
     ControllerPin = FAN;
-    if (ControllerValue == 1)
+    if (ControllerValue == 1) {
       digitalWrite(ControllerPin, LOW);
-    else
+      Serial.println("FAN turend ON");
+    } else {
       digitalWrite(ControllerPin, HIGH);
-    Serial.println(ControllerPin);
+      Serial.println("FAN turend OFF");
+    }
+  }
+  if (data.dataPath() == "/Humidifier") {
+    ControllerPin = HUMIDIFIER;
+    if (ControllerValue == 1) {
+      digitalWrite(ControllerPin, LOW);
+      Serial.println("HUMIDIFIER turend ON");
+    } else {
+      digitalWrite(ControllerPin, HIGH);
+      Serial.println("HUMIDIFIER turend OFF");
+    }
+  }
+  if (data.dataPath() == "/Heater") {
+    ControllerPin = HEATER;
+    if (ControllerValue == 1) {
+      digitalWrite(ControllerPin, LOW);
+      Serial.println("HEATER turend ON");
+    } else {
+      digitalWrite(ControllerPin, HIGH);
+      Serial.println("HEATER turend OFF");
+    }
   }
 
 
@@ -98,7 +111,9 @@ void streamTimeoutCallback(bool timeout)
 void setup()
 {
   pinMode(FAN, OUTPUT);
-  pinMode(LIGHT, OUTPUT);
+  pinMode(AC, OUTPUT);
+  pinMode(HUMIDIFIER, OUTPUT);
+  pinMode(HEATER, OUTPUT);
 
   Serial.begin(115200);
 
@@ -143,56 +158,19 @@ void setup()
 #if defined(ESP8266)
   stream.setBSSLBufferSize(2048 /* Rx in bytes, 512 - 16384 */, 512 /* Tx in bytes, 512 - 16384 */);
 #endif
-
-  if (!Firebase.beginStream(stream, "/Controller"))
+  String datapath = "/Controller/" + greenhouse_id;
+  if (!Firebase.beginStream(stream, datapath))
     Serial.printf("sream begin error, %s\n\n", stream.errorReason().c_str());
 
   Firebase.setStreamCallback(stream, streamCallback, streamTimeoutCallback);
 
-  /** Timeout options, below is default config.
-
-    //WiFi reconnect timeout (interval) in ms (10 sec - 5 min) when WiFi disconnected.
-    config.timeout.wifiReconnect = 10 * 1000;
-
-    //Socket begin connection timeout (ESP32) or data transfer timeout (ESP8266) in ms (1 sec - 1 min).
-    config.timeout.socketConnection = 30 * 1000;
-
-    //ESP32 SSL handshake in ms (1 sec - 2 min). This option doesn't allow in ESP8266 core library.
-    config.timeout.sslHandshake = 2 * 60 * 1000;
-
-    //Server response read timeout in ms (1 sec - 1 min).
-    config.timeout.serverResponse = 10 * 1000;
-
-    //RTDB Stream keep-alive timeout in ms (20 sec - 2 min) when no server's keep-alive event data received.
-    config.timeout.rtdbKeepAlive = 45 * 1000;
-
-    //RTDB Stream reconnect timeout (interval) in ms (1 sec - 1 min) when RTDB Stream closed and want to resume.
-    config.timeout.rtdbStreamReconnect = 1 * 1000;
-
-    //RTDB Stream error notification timeout (interval) in ms (3 sec - 30 sec). It determines how often the readStream
-    //will return false (error) when it called repeatedly in loop.
-    config.timeout.rtdbStreamError = 3 * 1000;
-
-  */
 }
 
 void loop()
 {
-
-  //  if (Firebase.ready() && (millis() - sendDataPrevMillis > 15000 || sendDataPrevMillis == 0))
-  //  {
-  //    sendDataPrevMillis = millis();
-  //    count++;
-  //    FirebaseJson json;
-  //    json.add("data", "hello");
-  //    json.add("num", count);
-  //    Serial.printf("Set json... %s\n\n", Firebase.setJSON(fbdo, "/test/stream/data/json", json) ? "ok" : fbdo.errorReason().c_str());
-  //  }
-
   if (dataChanged)
   {
     dataChanged = false;
     Serial.printf("Recieved...");
-
   }
 }

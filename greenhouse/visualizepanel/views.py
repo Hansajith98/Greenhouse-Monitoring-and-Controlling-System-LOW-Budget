@@ -27,15 +27,22 @@ def update_controller(request):
     if (request.method == 'GET'):
         fan_status = int(request.GET.get('Fan')) if request.GET.get('Fan') != None else None
         ac_status = int(request.GET.get('AC')) if request.GET.get('AC') != None else None
+        humidifier_status = int(request.GET.get('Humidifier')) if request.GET.get('Humidifier') != None else None
+        heater_status = int(request.GET.get('Heater')) if request.GET.get('Heater') != None else None
+
         if fan_status != None:
             database.child("Controller").child(green_house_Id).child("Fan").set(fan_status)
         if ac_status != None:
             database.child("Controller").child(green_house_Id).child("AC").set(ac_status)
+        if humidifier_status != None:
+            database.child("Controller").child(green_house_Id).child("Humidifier").set(humidifier_status)
+        if heater_status != None:
+            database.child("Controller").child(green_house_Id).child("Heater").set(heater_status)
     return HttpResponse("Accepted", content_type='text/plain') 
 
 
 def retrieve_sensor_dataframe():
-    all_data = database.child("Sensor").get()
+    all_data = database.child("Sensor").child(green_house_Id).get()
     dataframe = pd.DataFrame.from_dict(all_data.val()).T
     dataframe.reset_index(inplace=True)
     dataframe.rename(columns={"index": "Date"}, inplace=True)
@@ -64,14 +71,16 @@ def send_dashboard_data(request):
                 'backgroundColor': colorPrimary,
                 'borderColor': colorPrimary,
                 'data': {
-                    'Temperature': chart_data[0],
-                    'Humidity': chart_data[1]
+                    'Temperature': chart_data[1],
+                    'Humidity': chart_data[0]
                 },
             }
         },
         'controllers': {
             'Fan': controller_data['Fan'],
-            'AC': controller_data['AC']
+            'AC': controller_data['AC'],
+            'Humidifier': controller_data['Humidifier'],
+            'Heater': controller_data['Heater']
         },
     })
 

@@ -15,7 +15,8 @@
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
     <link rel="stylesheet" href="{% static 'index.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 
 
@@ -24,7 +25,9 @@
 <body class="bg-light bg-gradient">
     <div class="container-fluid">
         <center class="row">
-            <div class="fs-1 text-secondary fw-bold text-center"><h1>Welcome to GreenHouse Dashboard</h1></div>
+            <div class="fs-1 text-secondary fw-bold text-center">
+                <h1>Welcome to GreenHouse Dashboard</h1>
+            </div>
         </center>
         <hr />
         <div class="row">
@@ -32,25 +35,45 @@
                 <canvas id="myChartline"></canvas>
             </div>
             <div class="col-md-6">
-                <div class="col-md-3">
+                <div class="row">
+                <div class="col-md-3 mb-2">
                     Fan Button
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <label class="switch" id="Fan">
                         <input type="checkbox" id="FanButton" onclick="fan_button_clicked()">
                         <span class="slider round"></span>
                     </label>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     AC Button
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <label class="switch" id="AC">
                         <input type="checkbox" id="ACButton" onclick="AC_button_clicked()">
                         <span class="slider round"></span>
                     </label>
                 </div>
+                <div class="col-md-3 mb-2">
+                    Humidifier Button
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label class="switch" id="Fan">
+                        <input type="checkbox" id="HumidifierButton" onclick="humidifier_button_clicked()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="col-md-3 mb-2">
+                    Heater Button
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label class="switch" id="Fan">
+                        <input type="checkbox" id="HeaterButton" onclick="heater_button_clicked()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
+        </div>
         </div>
     </div>
 
@@ -85,6 +108,8 @@
 
             document.getElementById("FanButton").checked = response_data.controllers.Fan;
             document.getElementById("ACButton").checked = response_data.controllers.AC;
+            document.getElementById("HeaterButton").checked = response_data.controllers.Heater;
+            document.getElementById("HumidifierButton").checked = response_data.controllers.Humidifier;
 
             console.log('data');
             // console.log(XAxes_labels);
@@ -167,8 +192,44 @@
             })
         }
 
+        function heater_button_clicked() {
+            document.getElementById("HeaterButton").checked = document.getElementById("HeaterButton").checked == true ? 1 : 0;
+            console.log(document.getElementById("HeaterButton").checked);
+            var heater_status = document.getElementById("HeaterButton").checked == true ? "1" : "0";
+            $.ajax({
+                method: "GET",
+                url: 'controller/',
+                data: "Heater=" + heater_status,
+                success: function (data) {
+                    console.log("Updated");
+                },
+                error: function (error_data) {
+                    console.log("can't update");
+                    console.log(error_data);
+                }
+            })
+        }
+
+        function humififier_button_clicked() {
+            document.getElementById("HumidifierButton").checked = document.getElementById("HumidifierButton").checked == true ? 1 : 0;
+            console.log(document.getElementById("HumidifierButton").checked);
+            var humidifier_status = document.getElementById("HumidifierButton").checked == true ? "1" : "0";
+            $.ajax({
+                method: "GET",
+                url: 'controller/',
+                data: "Humidifier=" + humidifier_status,
+                success: function (data) {
+                    console.log("Updated");
+                },
+                error: function (error_data) {
+                    console.log("can't update");
+                    console.log(error_data);
+                }
+            })
+        }
+
         var wsStart = 'ws://'
-        var endpoint = wsStart + window.location.host + "ws/"
+        var endpoint = wsStart + window.location.host + "/ws/dashboard"
         let socket = new WebSocket(endpoint);
 
         socket.onopen = function (e) {
@@ -178,10 +239,14 @@
         socket.onmessage = function (event) {
             var recieved_data = JSON.parse(event.data);
             console.log(`[message] Data received from server: ${recieved_data}`);
-            chartdata.data.labels.push(recieved_data.date);
-            chartdata.data.datasets.data.Temperature.push(recieved_data.Temperature);
-            chartdata.data.datasets.data.Humidity.push(recieved_data.Humidity);
-            drawLineGraph(chartdata, 'myChartline');
+
+            if (window.location.pathname.includes(recieved_data.greenhouse_id)) {
+                chartdata.data.labels.push(recieved_data.date);
+                chartdata.data.datasets.data.Temperature.push(recieved_data.Temperature);
+                chartdata.data.datasets.data.Humidity.push(recieved_data.Humidity);
+                console.log(recieved_data.Humidity)
+                drawLineGraph(chartdata, 'myChartline');
+            }
 
         };
 

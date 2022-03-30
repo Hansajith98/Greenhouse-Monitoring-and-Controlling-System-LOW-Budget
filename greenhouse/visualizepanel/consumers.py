@@ -27,7 +27,6 @@ class WSConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data):
-        print(text_data)
         # Print message that receive from Websocket
 
         # Send data to group
