@@ -1,7 +1,7 @@
-const usernameEl = document.querySelector('#username');
-const emailEl = document.querySelector('#email');
-const passwordEl = document.querySelector('#password');
-const confirmPasswordEl = document.querySelector('#confirm-password');
+const usernameEl = document.querySelector('#user_name');
+const emailEl = document.querySelector('#Email');
+const passwordEl = document.querySelector('#Password');
+const confirmPasswordEl = document.querySelector('#confirm_password');
 
 const form = document.querySelector('#signup');
 
@@ -43,7 +43,6 @@ const checkEmail = () => {
 
 const checkPassword = () => {
     let valid = false;
-
 
     const password = passwordEl.value.trim();
 
@@ -134,7 +133,7 @@ form.addEventListener('submit', function (e) {
 
     // submit to the server if the form is valid
     if (isFormValid) {
-
+        document.Signupform.submit();
     }
 });
 

@@ -12,7 +12,7 @@ database = firebase.database()
 
 @login_necessary() 
 def menupanel(request):
-    user_name = database.child("User_Info").child(request.session['uid']).get().val()["User_Name"]
+    user_name = request.session['uname']
     greenhouse_data_from_fire = database.child('CropDevices').get()
     greenhouse_names = []
     greenhouse_id = []
@@ -26,7 +26,9 @@ def menupanel(request):
 
 @login_necessary()
 def new_greenhouse(request):
-    return render(request, 'newgreenhouse.html')
+    user_name = request.session['uname']
+    context = {'user_name':user_name}
+    return render(request, 'newgreenhouse.html', context=context)
 
 
 @login_necessary()

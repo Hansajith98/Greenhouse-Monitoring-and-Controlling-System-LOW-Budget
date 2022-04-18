@@ -1,7 +1,7 @@
-const usernameEl = document.querySelector('#username');
-const emailEl = document.querySelector('#email');
-const passwordEl = document.querySelector('#password');
-const confirmPasswordEl = document.querySelector('#confirm-password');
+const usernameEl = document.querySelector('#user_name');
+const emailEl = document.querySelector('#Email');
+const passwordEl = document.querySelector('#Password');
+const confirmPasswordEl = document.querySelector('#confirm_password');
 
 const form = document.querySelector('#signup');
 
@@ -44,7 +44,6 @@ const checkEmail = () => {
 const checkPassword = () => {
     let valid = false;
 
-
     const password = passwordEl.value.trim();
 
     if (!isRequired(password)) {
@@ -67,10 +66,13 @@ const checkConfirmPassword = () => {
 
     if (!isRequired(confirmPassword)) {
         showError(confirmPasswordEl, 'Please enter the password again');
+        alert('empty');
     } else if (password !== confirmPassword) {
         showError(confirmPasswordEl, 'The password does not match');
+        alert('missmatch');
     } else {
         showSuccess(confirmPasswordEl);
+        alert('confirmed');
         valid = true;
     }
 
@@ -134,7 +136,7 @@ form.addEventListener('submit', function (e) {
 
     // submit to the server if the form is valid
     if (isFormValid) {
-
+        document.Signupform.submit();
     }
 });
 

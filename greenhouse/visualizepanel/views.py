@@ -20,7 +20,10 @@ green_house_Id = 'greenhouse1'
 def index(request, greenhouse):
     global green_house_Id
     green_house_Id = greenhouse
-    return render(request, 'index.html')
+    user_name = request.session['uname']
+    greenhouse_name = database.child("CropDevices").child(green_house_Id).child("Name").get().val()
+    context = {'user_name':user_name, 'greenhouse_name' : greenhouse_name}
+    return render(request, 'index.html', context=context)
 
 @login_necessary()
 def update_controller(request):
