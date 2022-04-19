@@ -9,10 +9,11 @@
 
 #include "config.h"
 
-#define FAN 2
-#define AC 3
-#define HEATER 4
-#define HUMIDIFIER 5
+#define FAN 0           //  D3
+#define AC 4            //  D2
+#define HEATER 5        //  D1
+#define HUMIDIFIER 16   //  D0
+#define LED 2           //  D4
 
 //Define Firebase Data object
 FirebaseData stream;
@@ -28,6 +29,12 @@ unsigned long sendDataPrevMillis = 0;
 int count = 0;
 
 volatile bool dataChanged = false;
+
+void LedIndicator(int delayTime = 100){
+  digitalWrite(LED, LOW);
+  delay(delayTime);
+  digitalWrite(LED, HIGH);
+}
 
 void streamCallback(StreamData data)
 {
@@ -49,6 +56,7 @@ void streamCallback(StreamData data)
     if (ControllerValue == 1) {
       digitalWrite(ControllerPin, LOW);
       Serial.println("AC turend ON");
+      LedIndicator();
     } else {
       digitalWrite(ControllerPin, HIGH);
       Serial.println("AC turend OFF");
@@ -59,6 +67,7 @@ void streamCallback(StreamData data)
     if (ControllerValue == 1) {
       digitalWrite(ControllerPin, LOW);
       Serial.println("FAN turend ON");
+      LedIndicator();
     } else {
       digitalWrite(ControllerPin, HIGH);
       Serial.println("FAN turend OFF");
@@ -69,6 +78,7 @@ void streamCallback(StreamData data)
     if (ControllerValue == 1) {
       digitalWrite(ControllerPin, LOW);
       Serial.println("HUMIDIFIER turend ON");
+      LedIndicator();
     } else {
       digitalWrite(ControllerPin, HIGH);
       Serial.println("HUMIDIFIER turend OFF");
@@ -79,6 +89,7 @@ void streamCallback(StreamData data)
     if (ControllerValue == 1) {
       digitalWrite(ControllerPin, LOW);
       Serial.println("HEATER turend ON");
+      LedIndicator();
     } else {
       digitalWrite(ControllerPin, HIGH);
       Serial.println("HEATER turend OFF");
@@ -114,6 +125,7 @@ void setup()
   pinMode(AC, OUTPUT);
   pinMode(HUMIDIFIER, OUTPUT);
   pinMode(HEATER, OUTPUT);
+  pinMode(LED, OUTPUT);
 
   Serial.begin(115200);
 
@@ -122,7 +134,8 @@ void setup()
   while (WiFi.status() != WL_CONNECTED)
   {
     Serial.print(".");
-    delay(300);
+    LedIndicator(50);
+    delay(250);
   }
   Serial.println();
   Serial.print("Connected with IP: ");

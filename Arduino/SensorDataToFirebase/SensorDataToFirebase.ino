@@ -1,5 +1,7 @@
+#include <ESP8266WiFi.h>
 #include <FirebaseESP8266.h>
 #include <time.h>
+#include <dht11.h>
 
 //Provide the token generation process info.
 #include <addons/TokenHelper.h>
@@ -10,6 +12,7 @@
 #include "config.h"
 
 #define LED_PIN 2
+#define DHT11PIN 4  // DHT11 sensor value reading pin
 
 String greenhouse_id = "greenhouse1";   // Change this with greenhouse id the device is assigned
 String device_id = "Device01";    // Change this with device id
@@ -19,8 +22,9 @@ FirebaseData fbdo;
 
 FirebaseAuth auth;
 FirebaseConfig config;
+dht11 DHT11;  // DHT11 object for handle DHT11 sensor work process
 
-static int temperature = random(0, 30);
+static float temperature = random(0, 30);
 static int humidity = random(10, 100);
 
 unsigned long sendDataPrevMillis = 0;
@@ -53,16 +57,19 @@ static void printCurrentTime()
   Serial.print(getCurrentLocalTimeString());
 }
 
-static int generateSensorValue( int recentValue )
-{
-  if (recentValue - 5 < 0) {
-    return (int)random(recentValue, recentValue + 10);
-  } else if (recentValue + 5 > 100) {
-    return (int)random(recentValue - 10, recentValue);
-  } else {
-    return (int)random(recentValue - 5, recentValue + 5);
-  }
+
+/*  Check and return air humidity usign DSH11 sensor  */
+int CheckDHT11Humidity() {
+  int chk = DHT11.read(DHT11PIN);
+  return (int)DHT11.humidity;
 }
+
+/*  Check and return air temperature usign DSH11 sensor  */
+float CheckDHT11Temperature() {
+  int chk = DHT11.read(DHT11PIN);
+  return (float)DHT11.temperature;
+}
+
 
 void setup()
 {
@@ -112,7 +119,7 @@ void setup()
 void loop()
 {
 
-  if (Firebase.ready() && (millis() - sendDataPrevMillis > 15000 || sendDataPrevMillis == 0))
+  if (Firebase.ready() && (millis() - sendDataPrevMillis > 10000 || sendDataPrevMillis == 0))
   {
     sendDataPrevMillis = millis();
 
@@ -123,8 +130,8 @@ void loop()
     String HumidityId = "Humidity";
     String TemperatureId = "Temperature";
     String DeviceId = "DeviceId";
-    humidity = generateSensorValue(humidity);
-    temperature = generateSensorValue(temperature);
+    humidity = CheckDHT11Humidity();
+    temperature = CheckDHT11Temperature();
 
     digitalWrite(LED_PIN, HIGH);
 

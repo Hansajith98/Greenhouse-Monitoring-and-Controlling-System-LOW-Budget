@@ -15,16 +15,17 @@ database = firebase.database()
 
 
 def stream_handler(message):
-    if "Humidity" in message["data"]:
-        updated_values['greenhouse_id'] = message['path'].split('/')[1]
-        updated_values['date'] = message['path'].split('/')[2]
-        try:
-            updated_values['Humidity'] = message['data']["Humidity"]
-            updated_values['Temperature'] = message['data']["Temperature"]
+    if(message['data'] != None):
+        if "Humidity" in message["data"]:
+            updated_values['greenhouse_id'] = message['path'].split('/')[1]
+            updated_values['date'] = message['path'].split('/')[2]
+            try:
+                updated_values['Humidity'] = message['data']["Humidity"]
+                updated_values['Temperature'] = message['data']["Temperature"]
 
-            ws.send(json.dumps( updated_values ))
-        except:
-            pass
+                ws.send(json.dumps( updated_values ))
+            except:
+                pass
 
 
 
